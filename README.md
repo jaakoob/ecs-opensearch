@@ -11,23 +11,23 @@ analytics and security analytics.
 
 ## Opensearch Modifications
 
-This repositroy conatins some modifications as opposed to the original repo. 
+This repositroy conatins some modifications as opposed to the original repo.
 This includes sections in the generator scripts which generate OpenSearch compatible
 index templates. Due to some differences in the APIs and available field types
-within OpenSearch, I adopted the build process to handle the differences and do 
+within OpenSearch, I adopted the build process to handle the differences and do
 some conversions. This makes it possible to get some future schema updates from the
 repo easily.
 
 Changes in field types:
 
-| ECS => Elasticsearch | Opensearch |
-|----------------------|------------|
-| constant_keyword     | keyword    |
-| wildcard             | keyword    |
-| flattened            | object     |
-| version              | keyword    |
+| ECS => Elasticsearch | Opensearch  |
+|----------------------|-------------|
+| constant_keyword     | keyword     |
+| wildcard             | wildcard    |
+| flattened            | flat_object |
+| version              | keyword     |
 
-These changes will lead to some differences in performance and search options. 
+These changes will lead to some differences in performance and search options.
 
 ## Documentation
 

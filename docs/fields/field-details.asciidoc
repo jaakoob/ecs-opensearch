@@ -1233,6 +1233,22 @@ example: `docker`
 
 // ===============================================================
 
+|
+[[field-container-security-context-privileged]]
+<<field-container-security-context-privileged, container.security_context.privileged>>
+
+a| Indicates whether the container is running in privileged mode.
+
+type: boolean
+
+
+
+
+
+| extended
+
+// ===============================================================
+
 |=====
 
 
@@ -1613,7 +1629,7 @@ beta::[ These fields are in beta and are subject to change.]
 [[field-device-id]]
 <<field-device-id, device.id>>
 
-a| The unique identifier of a device. The identifier must not change across application sessions but stay fixex for an instance of a (mobile) device. 
+a| The unique identifier of a device. The identifier must not change across application sessions but stay fixed for an instance of a (mobile) device. 
 
 On iOS, this value must be equal to the vendor identifier (https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor). On Android, this value must be equal to the Firebase Installation ID or a globally unique UUID which is persisted across sessions in your application.
 
@@ -3421,13 +3437,13 @@ example: `4648`
 [[field-event-created]]
 <<field-event-created, event.created>>
 
-a| event.created contains the date/time when the event was first read by an agent, or by your pipeline.
+a| `event.created` contains the date/time when the event was first read by an agent, or by your pipeline.
 
-This field is distinct from @timestamp in that @timestamp typically contain the time extracted from the original event.
+This field is distinct from `@timestamp` in that `@timestamp` typically contain the time extracted from the original event.
 
 In most situations, these two timestamps will be slightly different. The difference can be used to calculate the delay between your source generating an event, and the time when your agent first processed it. This can be used to monitor your agent's or pipeline's ability to keep up with your event source.
 
-In case the two timestamps are identical, @timestamp should be used.
+In case the two timestamps are identical, `@timestamp` should be used.
 
 type: date
 
@@ -3465,7 +3481,7 @@ example: `apache.access`
 
 a| Duration of the event in nanoseconds.
 
-If event.start and event.end are known this value should be the difference between the end and start time.
+If `event.start` and `event.end` are known this value should be the difference between the end and start time.
 
 type: long
 
@@ -3481,7 +3497,7 @@ type: long
 [[field-event-end]]
 <<field-event-end, event.end>>
 
-a| event.end contains the date when the event ended or when the activity was last observed.
+a| `event.end` contains the date when the event ended or when the activity was last observed.
 
 type: date
 
@@ -3553,7 +3569,7 @@ a| This is one of four ECS Categorization Fields, and indicates the highest leve
 
 `event.kind` gives high-level information about what type of information the event contains, without being specific to the contents of the event. For example, values of this field distinguish alert events from metric events.
 
-The value of this field can be used to inform how these kinds of events should be handled. They may warrant different retention, different access control, it may also help understand whether the data coming in at a regular interval or not.
+The value of this field can be used to inform how these kinds of events should be handled. They may warrant different retention, different access control, it may also help understand whether the data is coming in at a regular interval or not.
 
 type: keyword
 
@@ -3562,7 +3578,7 @@ type: keyword
 
 *Important*: The field value must be one of the following:
 
-alert, enrichment, event, metric, state, pipeline_error, signal
+alert, asset, enrichment, event, metric, state, pipeline_error, signal
 
 To learn more about when to use which value, visit the page
 <<ecs-allowed-values-event-kind,allowed values for event.kind>>
@@ -3769,7 +3785,7 @@ example: `7`
 [[field-event-start]]
 <<field-event-start, event.start>>
 
-a| event.start contains the date when the event started or when the activity was first observed.
+a| `event.start` contains the date when the event started or when the activity was first observed.
 
 type: date
 
@@ -3927,22 +3943,6 @@ type: keyword
 
 
 example: `my-function`
-
-| extended
-
-// ===============================================================
-
-|
-[[field-faas-trigger]]
-<<field-faas-trigger, faas.trigger>>
-
-a| Details about the function trigger.
-
-type: nested
-
-
-
-
 
 | extended
 
@@ -6958,6 +6958,25 @@ example: `elastic`
 // ===============================================================
 
 |
+[[field-orchestrator-resource-annotation]]
+<<field-orchestrator-resource-annotation, orchestrator.resource.annotation>>
+
+a| The list of annotations added to the resource.
+
+type: keyword
+
+
+Note: this field should contain an array of values.
+
+
+
+example: `['key1:value1', 'key2:value2', 'key3:value3']`
+
+| extended
+
+// ===============================================================
+
+|
 [[field-orchestrator-resource-id]]
 <<field-orchestrator-resource-id, orchestrator.resource.id>>
 
@@ -6987,6 +7006,25 @@ Note: this field should contain an array of values.
 
 
 
+
+| extended
+
+// ===============================================================
+
+|
+[[field-orchestrator-resource-label]]
+<<field-orchestrator-resource-label, orchestrator.resource.label>>
+
+a| The list of labels added to the resource.
+
+type: keyword
+
+
+Note: this field should contain an array of values.
+
+
+
+example: `['key1:value1', 'key2:value2', 'key3:value3']`
 
 | extended
 
@@ -8412,6 +8450,44 @@ example: `2016-05-23T08:05:34.853Z`
 // ===============================================================
 
 |
+[[field-process-thread-capabilities-effective]]
+<<field-process-thread-capabilities-effective, process.thread.capabilities.effective>>
+
+a| This is the set of capabilities used by the kernel to perform permission checks for the thread.
+
+type: keyword
+
+
+Note: this field should contain an array of values.
+
+
+
+example: `["CAP_BPF", "CAP_SYS_ADMIN"]`
+
+| extended
+
+// ===============================================================
+
+|
+[[field-process-thread-capabilities-permitted]]
+<<field-process-thread-capabilities-permitted, process.thread.capabilities.permitted>>
+
+a| This is a limiting superset for the effective capabilities that the thread may assume.
+
+type: keyword
+
+
+Note: this field should contain an array of values.
+
+
+
+example: `["CAP_BPF", "CAP_SYS_ADMIN"]`
+
+| extended
+
+// ===============================================================
+
+|
 [[field-process-thread-id]]
 <<field-process-thread-id, process.thread.id>>
 
@@ -8568,6 +8644,24 @@ type: long
 example: `1325`
 
 | extended
+
+// ===============================================================
+
+|
+[[field-process-vpid]]
+<<field-process-vpid, process.vpid>>
+
+a| Virtual process id.
+
+The process id within a pid namespace. This is not necessarily unique across all processes on the host but it is unique within the process namespace that the process exists within.
+
+type: long
+
+
+
+example: `4242`
+
+| core
 
 // ===============================================================
 
@@ -10432,19 +10526,7 @@ example: `2020-11-05T17:25:47.000Z`
 
 a| The display name indicator in an UI friendly format
 
-Expected values for this field:
-
-* `5.2.75.227`
-* `2a02:cf40:add:4002:91f2:a9b2:e09a:6fc6`
-* `https://example.com/some/path`
-* `example.com`
-* `373d34874d7bc89fd4cefa6272ee80bf`
-* `b0e914d1bbe19433cc9df64ea1ca07fe77f7b150b511b786e46e007941a62bd7`
-* `email@example.com`
-* `HKLM\\SOFTWARE\\Microsoft\\Active`
-* `13335`
-* `00:00:5e:00:53:af`
-* `8008`
+URL, IP address, email address, registry key, port number, hash value, or other relevant name can serve as the display name.
 
 type: keyword
 
@@ -10990,19 +11072,7 @@ example: `2020-11-05T17:25:47.000Z`
 
 a| The display name indicator in an UI friendly format
 
-Expected values for this field:
-
-* `5.2.75.227`
-* `2a02:cf40:add:4002:91f2:a9b2:e09a:6fc6`
-* `https://example.com/some/path`
-* `example.com`
-* `373d34874d7bc89fd4cefa6272ee80bf`
-* `b0e914d1bbe19433cc9df64ea1ca07fe77f7b150b511b786e46e007941a62bd7`
-* `email@example.com`
-* `HKLM\\SOFTWARE\\Microsoft\\Active`
-* `13335`
-* `00:00:5e:00:53:af`
-* `8008`
+URL, IP address, email address, registry key, port number, hash value, or other relevant name can serve as the display name.
 
 type: keyword
 

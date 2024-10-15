@@ -1,7 +1,7 @@
 {
   "_meta": {
     "documentation": "https://www.elastic.co/guide/en/ecs/current/ecs-process.html",
-    "ecs_version": "8.8.0-dev+exp"
+    "ecs_version": "8.11.0+exp"
   },
   "template": {
     "mappings": {
@@ -326,11 +326,17 @@
                         },
                         "start": {
                           "type": "date"
+                        },
+                        "vpid": {
+                          "type": "long"
                         }
                       }
                     },
                     "start": {
                       "type": "date"
+                    },
+                    "vpid": {
+                      "type": "long"
                     }
                   }
                 },
@@ -444,6 +450,9 @@
                       "type": "keyword"
                     }
                   }
+                },
+                "vpid": {
+                  "type": "long"
                 },
                 "working_directory": {
                   "fields": {
@@ -636,6 +645,9 @@
                       "type": "keyword"
                     }
                   }
+                },
+                "vpid": {
+                  "type": "long"
                 },
                 "working_directory": {
                   "fields": {
@@ -1023,6 +1035,9 @@
                     },
                     "start": {
                       "type": "date"
+                    },
+                    "vpid": {
+                      "type": "long"
                     }
                   }
                 },
@@ -1295,6 +1310,18 @@
                 },
                 "thread": {
                   "properties": {
+                    "capabilities": {
+                      "properties": {
+                        "effective": {
+                          "ignore_above": 1024,
+                          "type": "keyword"
+                        },
+                        "permitted": {
+                          "ignore_above": 1024,
+                          "type": "keyword"
+                        }
+                      }
+                    },
                     "id": {
                       "type": "long"
                     },
@@ -1347,6 +1374,9 @@
                       "type": "keyword"
                     }
                   }
+                },
+                "vpid": {
+                  "type": "long"
                 },
                 "working_directory": {
                   "fields": {
@@ -1603,11 +1633,17 @@
                         },
                         "start": {
                           "type": "date"
+                        },
+                        "vpid": {
+                          "type": "long"
                         }
                       }
                     },
                     "start": {
                       "type": "date"
+                    },
+                    "vpid": {
+                      "type": "long"
                     }
                   }
                 },
@@ -1722,6 +1758,9 @@
                     }
                   }
                 },
+                "vpid": {
+                  "type": "long"
+                },
                 "working_directory": {
                   "fields": {
                     "text": {
@@ -1750,6 +1789,18 @@
             },
             "thread": {
               "properties": {
+                "capabilities": {
+                  "properties": {
+                    "effective": {
+                      "ignore_above": 1024,
+                      "type": "keyword"
+                    },
+                    "permitted": {
+                      "ignore_above": 1024,
+                      "type": "keyword"
+                    }
+                  }
+                },
                 "id": {
                   "type": "long"
                 },
@@ -1808,6 +1859,9 @@
                   "type": "keyword"
                 }
               }
+            },
+            "vpid": {
+              "type": "long"
             },
             "working_directory": {
               "fields": {

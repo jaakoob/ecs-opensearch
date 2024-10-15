@@ -72,6 +72,19 @@
         Process id.
       example: 4242
 
+    - name: vpid
+      format: string
+      level: core
+      type: long
+      short: Virtual process id.
+      description: >
+        Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily
+        unique across all processes on the host but it is unique within the
+        process namespace that the process exists within.
+      example: 4242
+
     - name: entity_id
       level: extended
       type: keyword
@@ -188,6 +201,30 @@
       example: 'thread-0'
       description: >
         Thread name.
+
+    - name: thread.capabilities.permitted
+      level: extended
+      type: keyword
+      short: Array of capabilities a thread could assume.
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      description: >
+        This is a limiting superset for the effective capabilities that the
+        thread may assume.
+      example: "[\"CAP_BPF\", \"CAP_SYS_ADMIN\"]"
+      normalize:
+        - array
+
+    - name: thread.capabilities.effective
+      level: extended
+      type: keyword
+      short: Array of capabilities used for permission checks.
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      description: >
+        This is the set of capabilities used by the kernel to perform permission
+        checks for the thread.
+      example: "[\"CAP_BPF\", \"CAP_SYS_ADMIN\"]"
+      normalize:
+        - array
 
     - name: start
       level: extended

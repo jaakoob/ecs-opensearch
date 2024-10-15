@@ -1573,6 +1573,15 @@ container:
       normalize: []
       short: Runtime managing this container.
       type: keyword
+    container.security_context.privileged:
+      dashed_name: container-security-context-privileged
+      description: Indicates whether the container is running in privileged mode.
+      flat_name: container.security_context.privileged
+      level: extended
+      name: security_context.privileged
+      normalize: []
+      short: Indicates whether the container is running in privileged mode.
+      type: boolean
   group: 2
   name: container
   prefix: container.
@@ -2155,7 +2164,7 @@ device:
     device.id:
       dashed_name: device-id
       description: "The unique identifier of a device. The identifier must not change\
-        \ across application sessions but stay fixex for an instance of a (mobile)\
+        \ across application sessions but stay fixed for an instance of a (mobile)\
         \ device. \nOn iOS, this value must be equal to the vendor identifier (https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor).\
         \ On Android, this value must be equal to the Firebase Installation ID or\
         \ a globally unique UUID which is persisted across sessions in your application.\n\
@@ -4014,6 +4023,7 @@ event:
           can come from both host-based and network-based sources. An example source
           of a network-based detection of a file transfer would be the Zeek file.log.
         expected_event_types:
+        - access
         - change
         - creation
         - deletion
@@ -4184,10 +4194,10 @@ event:
       type: keyword
     event.created:
       dashed_name: event-created
-      description: 'event.created contains the date/time when the event was first
+      description: '`event.created` contains the date/time when the event was first
         read by an agent, or by your pipeline.
 
-        This field is distinct from @timestamp in that @timestamp typically contain
+        This field is distinct from `@timestamp` in that `@timestamp` typically contain
         the time extracted from the original event.
 
         In most situations, these two timestamps will be slightly different. The difference
@@ -4195,7 +4205,7 @@ event:
         and the time when your agent first processed it. This can be used to monitor
         your agent''s or pipeline''s ability to keep up with your event source.
 
-        In case the two timestamps are identical, @timestamp should be used.'
+        In case the two timestamps are identical, `@timestamp` should be used.'
       example: '2016-05-23T08:05:34.857Z'
       flat_name: event.created
       level: core
@@ -4225,7 +4235,7 @@ event:
       dashed_name: event-duration
       description: 'Duration of the event in nanoseconds.
 
-        If event.start and event.end are known this value should be the difference
+        If `event.start` and `event.end` are known this value should be the difference
         between the end and start time.'
       flat_name: event.duration
       format: duration
@@ -4239,14 +4249,14 @@ event:
       type: long
     event.end:
       dashed_name: event-end
-      description: event.end contains the date when the event ended or when the activity
-        was last observed.
+      description: '`event.end` contains the date when the event ended or when the
+        activity was last observed.'
       flat_name: event.end
       level: extended
       name: end
       normalize: []
-      short: event.end contains the date when the event ended or when the activity
-        was last observed.
+      short: '`event.end` contains the date when the event ended or when the activity
+        was last observed.'
       type: date
     event.hash:
       dashed_name: event-hash
@@ -4301,6 +4311,22 @@ event:
           This value is not used by Elastic solutions for alert documents that are
           created by rules executing within the Kibana alerting framework.'
         name: alert
+      - beta: This event categorization value is beta and subject to change.
+        description: 'This value indicates events whose primary purpose is to store
+          an inventory of assets/entities and their attributes. Assets/entities are
+          objects (such as users and hosts) that are expected to be subjects of detailed
+          analysis within the system.
+
+          Examples include lists of user identities or accounts ingested from directory
+          services such as Active Directory (AD), inventory of hosts pulled from configuration
+          management databases (CMDB), and lists of cloud storage buckets pulled from
+          cloud provider APIs.
+
+          This value is used by Elastic Security for asset management solutions. `event.kind:
+          asset` is not used for normal system events or logs that are coming from
+          an asset/entity, nor is it used for system events or logs coming from a
+          directory or CMDB system.'
+        name: asset
       - description: 'The `enrichment` value indicates an event collected to provide
           additional context, often to other events.
 
@@ -4360,7 +4386,7 @@ event:
 
         The value of this field can be used to inform how these kinds of events should
         be handled. They may warrant different retention, different access control,
-        it may also help understand whether the data coming in at a regular interval
+        it may also help understand whether the data is coming in at a regular interval
         or not.'
       example: alert
       flat_name: event.kind
@@ -4556,14 +4582,14 @@ event:
       type: long
     event.start:
       dashed_name: event-start
-      description: event.start contains the date when the event started or when the
-        activity was first observed.
+      description: '`event.start` contains the date when the event started or when
+        the activity was first observed.'
       flat_name: event.start
       level: extended
       name: start
       normalize: []
-      short: event.start contains the date when the event started or when the activity
-        was first observed.
+      short: '`event.start` contains the date when the event started or when the activity
+        was first observed.'
       type: date
     event.timezone:
       dashed_name: event-timezone
@@ -4796,15 +4822,6 @@ faas:
       normalize: []
       short: The name of a serverless function.
       type: keyword
-    faas.trigger:
-      dashed_name: faas-trigger
-      description: Details about the function trigger.
-      flat_name: faas.trigger
-      level: extended
-      name: trigger
-      normalize: []
-      short: Details about the function trigger.
-      type: nested
     faas.trigger.request_id:
       dashed_name: faas-trigger-request-id
       description: The ID of the trigger request , message, event, etc.
@@ -9127,6 +9144,18 @@ orchestrator:
       normalize: []
       short: Organization affected by the event (for multi-tenant orchestrator setups).
       type: keyword
+    orchestrator.resource.annotation:
+      dashed_name: orchestrator-resource-annotation
+      description: The list of annotations added to the resource.
+      example: '[''key1:value1'', ''key2:value2'', ''key3:value3'']'
+      flat_name: orchestrator.resource.annotation
+      ignore_above: 1024
+      level: extended
+      name: resource.annotation
+      normalize:
+      - array
+      short: The list of annotations added to the resource.
+      type: keyword
     orchestrator.resource.id:
       dashed_name: orchestrator-resource-id
       description: Unique ID of the resource being acted upon.
@@ -9150,6 +9179,18 @@ orchestrator:
       - array
       short: IP address assigned to the resource associated with the event being observed.
       type: ip
+    orchestrator.resource.label:
+      dashed_name: orchestrator-resource-label
+      description: The list of labels added to the resource.
+      example: '[''key1:value1'', ''key2:value2'', ''key3:value3'']'
+      flat_name: orchestrator.resource.label
+      ignore_above: 1024
+      level: extended
+      name: resource.label
+      normalize:
+      - array
+      short: The list of labels added to the resource.
+      type: keyword
     orchestrator.resource.name:
       dashed_name: orchestrator-resource-name
       description: Name of the resource being acted upon.
@@ -10739,6 +10780,22 @@ process:
       original_fieldset: process
       short: The time the process started.
       type: date
+    process.entry_leader.parent.session_leader.vpid:
+      dashed_name: process-entry-leader-parent-session-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.entry_leader.parent.session_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.entry_leader.parent.start:
       dashed_name: process-entry-leader-parent-start
       description: The time the process started.
@@ -10750,6 +10807,22 @@ process:
       original_fieldset: process
       short: The time the process started.
       type: date
+    process.entry_leader.parent.vpid:
+      dashed_name: process-entry-leader-parent-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.entry_leader.parent.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.entry_leader.pid:
       dashed_name: process-entry-leader-pid
       description: Process id.
@@ -10992,6 +11065,22 @@ process:
       original_fieldset: user
       short: Short name or login of the user.
       type: keyword
+    process.entry_leader.vpid:
+      dashed_name: process-entry-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.entry_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.entry_leader.working_directory:
       dashed_name: process-entry-leader-working-directory
       description: The working directory of the process.
@@ -11440,6 +11529,22 @@ process:
       original_fieldset: user
       short: Short name or login of the user.
       type: keyword
+    process.group_leader.vpid:
+      dashed_name: process-group-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.group_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.group_leader.working_directory:
       dashed_name: process-group-leader-working-directory
       description: The working directory of the process.
@@ -12625,6 +12730,22 @@ process:
       original_fieldset: process
       short: The time the process started.
       type: date
+    process.parent.group_leader.vpid:
+      dashed_name: process-parent-group-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.parent.group_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.parent.hash.md5:
       dashed_name: process-parent-hash-md5
       description: MD5 hash.
@@ -13386,6 +13507,36 @@ process:
       original_fieldset: group
       short: Name of the group.
       type: keyword
+    process.parent.thread.capabilities.effective:
+      dashed_name: process-parent-thread-capabilities-effective
+      description: This is the set of capabilities used by the kernel to perform permission
+        checks for the thread.
+      example: '["CAP_BPF", "CAP_SYS_ADMIN"]'
+      flat_name: process.parent.thread.capabilities.effective
+      ignore_above: 1024
+      level: extended
+      name: thread.capabilities.effective
+      normalize:
+      - array
+      original_fieldset: process
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      short: Array of capabilities used for permission checks.
+      type: keyword
+    process.parent.thread.capabilities.permitted:
+      dashed_name: process-parent-thread-capabilities-permitted
+      description: This is a limiting superset for the effective capabilities that
+        the thread may assume.
+      example: '["CAP_BPF", "CAP_SYS_ADMIN"]'
+      flat_name: process.parent.thread.capabilities.permitted
+      ignore_above: 1024
+      level: extended
+      name: thread.capabilities.permitted
+      normalize:
+      - array
+      original_fieldset: process
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      short: Array of capabilities a thread could assume.
+      type: keyword
     process.parent.thread.id:
       dashed_name: process-parent-thread-id
       description: Thread ID.
@@ -13506,6 +13657,22 @@ process:
       original_fieldset: user
       short: Short name or login of the user.
       type: keyword
+    process.parent.vpid:
+      dashed_name: process-parent-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.parent.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.parent.working_directory:
       dashed_name: process-parent-working-directory
       description: The working directory of the process.
@@ -14201,6 +14368,22 @@ process:
       original_fieldset: process
       short: The time the process started.
       type: date
+    process.session_leader.parent.session_leader.vpid:
+      dashed_name: process-session-leader-parent-session-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.session_leader.parent.session_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.session_leader.parent.start:
       dashed_name: process-session-leader-parent-start
       description: The time the process started.
@@ -14212,6 +14395,22 @@ process:
       original_fieldset: process
       short: The time the process started.
       type: date
+    process.session_leader.parent.vpid:
+      dashed_name: process-session-leader-parent-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.session_leader.parent.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.session_leader.pid:
       dashed_name: process-session-leader-pid
       description: Process id.
@@ -14454,6 +14653,22 @@ process:
       original_fieldset: user
       short: Short name or login of the user.
       type: keyword
+    process.session_leader.vpid:
+      dashed_name: process-session-leader-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.session_leader.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      original_fieldset: process
+      short: Virtual process id.
+      type: long
     process.session_leader.working_directory:
       dashed_name: process-session-leader-working-directory
       description: The working directory of the process.
@@ -14501,6 +14716,34 @@ process:
       normalize: []
       original_fieldset: group
       short: Name of the group.
+      type: keyword
+    process.thread.capabilities.effective:
+      dashed_name: process-thread-capabilities-effective
+      description: This is the set of capabilities used by the kernel to perform permission
+        checks for the thread.
+      example: '["CAP_BPF", "CAP_SYS_ADMIN"]'
+      flat_name: process.thread.capabilities.effective
+      ignore_above: 1024
+      level: extended
+      name: thread.capabilities.effective
+      normalize:
+      - array
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      short: Array of capabilities used for permission checks.
+      type: keyword
+    process.thread.capabilities.permitted:
+      dashed_name: process-thread-capabilities-permitted
+      description: This is a limiting superset for the effective capabilities that
+        the thread may assume.
+      example: '["CAP_BPF", "CAP_SYS_ADMIN"]'
+      flat_name: process.thread.capabilities.permitted
+      ignore_above: 1024
+      level: extended
+      name: thread.capabilities.permitted
+      normalize:
+      - array
+      pattern: ^(CAP_[A-Z_]+|\d+)$
+      short: Array of capabilities a thread could assume.
       type: keyword
     process.thread.id:
       dashed_name: process-thread-id
@@ -14643,6 +14886,21 @@ process:
       original_fieldset: user
       short: Short name or login of the user.
       type: keyword
+    process.vpid:
+      dashed_name: process-vpid
+      description: 'Virtual process id.
+
+        The process id within a pid namespace. This is not necessarily unique across
+        all processes on the host but it is unique within the process namespace that
+        the process exists within.'
+      example: 4242
+      flat_name: process.vpid
+      format: string
+      level: core
+      name: vpid
+      normalize: []
+      short: Virtual process id.
+      type: long
     process.working_directory:
       dashed_name: process-working-directory
       description: The working directory of the process.
@@ -18734,20 +18992,11 @@ threat:
       type: date
     threat.enrichments.indicator.name:
       dashed_name: threat-enrichments-indicator-name
-      description: The display name indicator in an UI friendly format
+      description: 'The display name indicator in an UI friendly format
+
+        URL, IP address, email address, registry key, port number, hash value, or
+        other relevant name can serve as the display name.'
       example: 5.2.75.227
-      expected_values:
-      - 5.2.75.227
-      - 2a02:cf40:add:4002:91f2:a9b2:e09a:6fc6
-      - https://example.com/some/path
-      - example.com
-      - 373d34874d7bc89fd4cefa6272ee80bf
-      - b0e914d1bbe19433cc9df64ea1ca07fe77f7b150b511b786e46e007941a62bd7
-      - email@example.com
-      - HKLM\\SOFTWARE\\Microsoft\\Active
-      - 13335
-      - 00:00:5e:00:53:af
-      - 8008
       flat_name: threat.enrichments.indicator.name
       ignore_above: 1024
       level: extended
@@ -21459,20 +21708,11 @@ threat:
       type: date
     threat.indicator.name:
       dashed_name: threat-indicator-name
-      description: The display name indicator in an UI friendly format
+      description: 'The display name indicator in an UI friendly format
+
+        URL, IP address, email address, registry key, port number, hash value, or
+        other relevant name can serve as the display name.'
       example: 5.2.75.227
-      expected_values:
-      - 5.2.75.227
-      - 2a02:cf40:add:4002:91f2:a9b2:e09a:6fc6
-      - https://example.com/some/path
-      - example.com
-      - 373d34874d7bc89fd4cefa6272ee80bf
-      - b0e914d1bbe19433cc9df64ea1ca07fe77f7b150b511b786e46e007941a62bd7
-      - email@example.com
-      - HKLM\\SOFTWARE\\Microsoft\\Active
-      - 13335
-      - 00:00:5e:00:53:af
-      - 8008
       flat_name: threat.indicator.name
       ignore_above: 1024
       level: extended
